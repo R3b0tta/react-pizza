@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Categories from "./components/Categories";
 import Sort from "./components/Sort";
 import Pizza from "./components/Pizza";
+import pizzasJson from "./assets/pizzas.json";
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
           </div>
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">
-            <Pizza title="Мексиканская" price={490} />
+            {pizzasJson.map((pizza) => (
+              <Pizza {...pizza} />
+            ))}
           </div>
         </div>
       </div>
