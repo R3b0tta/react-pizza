@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Pizza({ price, title, imageUrl, sizes, types }) {
+export default function Index({ price, title, imageUrl, sizes, types }) {
   const [pizzaCount, setPizzaCount] = React.useState(0);
   function addCountPizza() {
     setPizzaCount(pizzaCount + 1);
@@ -16,7 +16,7 @@ export default function Pizza({ price, title, imageUrl, sizes, types }) {
   }
   return (
     <div className="pizza-block">
-      <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
+      <img className="pizza-block__image" src={imageUrl} alt="Index" />
       <h4 className="pizza-block__title">{title}</h4>
       <div className="pizza-block__selector">
         <ul>
