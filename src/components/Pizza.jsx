@@ -22,6 +22,7 @@ export default function Pizza({ price, title, imageUrl, sizes, types }) {
         <ul>
           {types.map((typeId, index) => (
             <li
+              key={typeId}
               className={typeActive === index ? "active" : ""}
               onClick={() => handleTypeClick(index)}
             >
@@ -32,6 +33,7 @@ export default function Pizza({ price, title, imageUrl, sizes, types }) {
         <ul>
           {sizes.map((size, index) => (
             <li
+              key={size}
               className={sizeActive === index ? "active" : ""}
               onClick={() => handleSizeClick(index)}
             >

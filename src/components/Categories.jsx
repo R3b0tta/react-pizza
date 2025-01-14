@@ -18,6 +18,7 @@ export default function Categories() {
       <ul>
         {categories.map((category, index) => (
           <li
+            key={category}
             className={activeCategory === index ? "active" : ""}
             onClick={() => handleCategoryClick(index)}
           >
