@@ -9,6 +9,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [activeCategory, setActiveCategory] = React.useState(0);
   const [sortType, setSortType] = React.useState(0);
+  const [isReversed, setIsReversed] = React.useState(false);
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -23,11 +24,11 @@ const Home = () => {
     fetch(url)
       .then((res) => res.json())
       .then((json) => {
-        setItems(json);
+        isReversed ? setItems(json.reverse()) : setItems(json);
         setIsLoading(false);
         window.scrollTo(0, 0);
       });
-  }, [activeCategory, sortType]);
+  }, [activeCategory, sortType, isReversed]);
   return (
     <div className="container">
       <div className="content__top">
@@ -35,7 +36,12 @@ const Home = () => {
           value={activeCategory}
           onClickCategory={(i) => setActiveCategory(i)}
         />
-        <Sort value={sortType} onClickSortType={(i) => setSortType(i)} />
+        <Sort
+          value={sortType}
+          onClickSortType={(i) => setSortType(i)}
+          changeReverse={() => setIsReversed(!isReversed)}
+          isUp={isReversed}
+        />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
