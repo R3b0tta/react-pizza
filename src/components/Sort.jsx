@@ -1,15 +1,10 @@
 import React from "react";
 
-export default function Sort() {
+export default function Sort({ value, onClickSortType }) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [isActive, setIsActive] = React.useState(0);
   const sortList = ["популярности", "цене", "алфавиту"];
-  const sortName = sortList[isActive];
+  const sortName = sortList[value];
 
-  function handleSortItem(index) {
-    setIsActive(index);
-    toggleActivateSort();
-  }
   function toggleActivateSort() {
     setIsOpen(!isOpen);
   }
@@ -37,8 +32,11 @@ export default function Sort() {
             {sortList.map((item, index) => (
               <li
                 key={item}
-                className={isActive === index ? "active" : ""}
-                onClick={() => handleSortItem(index)}
+                className={value === index ? "active" : ""}
+                onClick={() => {
+                  onClickSortType(index);
+                  setIsOpen(false);
+                }}
               >
                 {item}
               </li>

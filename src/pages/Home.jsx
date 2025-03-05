@@ -7,23 +7,35 @@ import Pizza from "../components/Pizza";
 const Home = () => {
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const url =
-    "https://6785cbe9f80b78923aa47299.mockapi.io/api/react-pizza/pizzas";
-  url.searchParams.append("sortBy", "title");
+  const [activeCategory, setActiveCategory] = React.useState(0);
+  const [sortType, setSortType] = React.useState(0);
+
   React.useEffect(() => {
-    fetch("https://6785cbe9f80b78923aa47299.mockapi.io/api/react-pizza/pizzas")
+    setIsLoading(true);
+    const url = new URL(
+      "https://6785cbe9f80b78923aa47299.mockapi.io/api/react-pizza/pizzas",
+    );
+    if (activeCategory > 0) {
+      url.searchParams.append("category", activeCategory);
+    }
+    const sortTypes = ["rating", "price", "title"];
+    url.searchParams.append("sortBy", sortTypes[sortType]);
+    fetch(url)
       .then((res) => res.json())
       .then((json) => {
         setItems(json);
         setIsLoading(false);
         window.scrollTo(0, 0);
       });
-  }, []);
+  }, [activeCategory, sortType]);
   return (
     <div className="container">
       <div className="content__top">
-        <Categories />
-        <Sort />
+        <Categories
+          value={activeCategory}
+          onClickCategory={(i) => setActiveCategory(i)}
+        />
+        <Sort value={sortType} onClickSortType={(i) => setSortType(i)} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
