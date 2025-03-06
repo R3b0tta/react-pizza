@@ -3,16 +3,17 @@ import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import Skeleton from "../components/Pizza/Skeleton";
 import Pizza from "../components/Pizza";
-import ReactPaginate from "react-paginate";
 import { Pagination } from "../components/Pagination";
+import { AppContext } from "../App";
 
-const Home = ({ searchValue }) => {
+const Home = () => {
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [activeCategory, setActiveCategory] = React.useState(0);
   const [sortType, setSortType] = React.useState(0);
   const [isReversed, setIsReversed] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
+  const { searchValue } = React.useContext(AppContext);
 
   React.useEffect(() => {
     setIsLoading(true);
