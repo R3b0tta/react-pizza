@@ -11,12 +11,19 @@
 
     }
   }
-  svg {
+  .search {
+      width: 24px;
+      height: 24px;
+      opacity: 0.5;
+      position: absolute;
+      left: 260px;
+      top: 12px;
+  }
+  .cross {
     width: 24px;
     height: 24px;
     opacity: 0.5;
-    position: absolute;
-    left: 260px;
-    top: 12px;
+    padding-top: 5px;
+    cursor: pointer;
   }
 }

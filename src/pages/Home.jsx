@@ -10,14 +10,12 @@ import { setItems } from "../redux/slices/pizzaSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.pizzaSlice.items);
+  const { items } = useSelector((state) => state.pizzaSlice);
+  const { activeCategory, isReversed, sortType } = useSelector(
+    (state) => state.filterSlice,
+  );
   const [isLoading, setIsLoading] = React.useState(true);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const isReversed = useSelector((state) => state.filterSlice.isReversed);
-  const activeCategory = useSelector(
-    (state) => state.filterSlice.activeCategory,
-  );
-  const sortType = useSelector((state) => state.filterSlice.sortType);
   const { searchValue } = React.useContext(AppContext);
 
   React.useEffect(() => {
