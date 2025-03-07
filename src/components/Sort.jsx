@@ -1,9 +1,17 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setIsReversed, setSortType } from "../redux/slices/filterSlice";
 
-export default function Sort({ value, onClickSortType, changeReverse, isUp }) {
+export default function Sort() {
+  const dispatch = useDispatch();
+  const sortType = useSelector((state) => state.filterSlice.sortType);
+  const isUp = useSelector((state) => state.filterSlice.isReversed);
   const [isOpen, setIsOpen] = React.useState(false);
   const sortList = ["популярности", "цене", "алфавиту"];
-  const sortName = sortList[value];
+  const sortName = sortList[sortType];
+
+  const changeReverse = () => dispatch(setIsReversed(!isUp));
+  const onClickSortType = (i) => dispatch(setSortType(i));
 
   function toggleActivateSort() {
     setIsOpen(!isOpen);
@@ -37,7 +45,7 @@ export default function Sort({ value, onClickSortType, changeReverse, isUp }) {
             {sortList.map((item, index) => (
               <li
                 key={item}
-                className={value === index ? "active" : ""}
+                className={sortType === index ? "active" : ""}
                 onClick={() => {
                   onClickSortType(index);
                   setIsOpen(false);
