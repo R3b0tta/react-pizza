@@ -7,22 +7,28 @@ import { Pagination } from "../components/Pagination";
 import { AppContext } from "../App";
 import { useSelector, useDispatch } from "react-redux";
 import { setItems } from "../redux/slices/pizzaSlice";
+import { setCurrentPage, setFilters } from "../redux/slices/filterSlice";
+import qs from "qs";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { items } = useSelector((state) => state.pizzaSlice);
-  const { activeCategory, isReversed, sortType } = useSelector(
+  const { activeCategory, isReversed, sortType, currentPage } = useSelector(
     (state) => state.filterSlice,
   );
   const [isLoading, setIsLoading] = React.useState(true);
-  const [currentPage, setCurrentPage] = React.useState(1);
   const { searchValue } = React.useContext(AppContext);
-
-  React.useEffect(() => {
+  const [isReduxLoaded, setReduxLoaded] = React.useState(false);
+  const isMounted = React.useRef(false);
+  function fetchPizzas() {
     setIsLoading(true);
     const url = new URL(
       "https://6785cbe9f80b78923aa47299.mockapi.io/api/react-pizza/pizzas",
     );
+
     if (activeCategory > 0) {
       url.searchParams.append("category", activeCategory);
     }
@@ -31,6 +37,7 @@ const Home = () => {
     url.searchParams.append("search", searchValue);
     url.searchParams.append("page", currentPage);
     url.searchParams.append("limit", 4);
+
     fetch(url)
       .then((res) => res.json())
       .then((json) => {
@@ -39,7 +46,40 @@ const Home = () => {
         setIsLoading(false);
         window.scrollTo(0, 0);
       });
+  }
+
+  React.useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+
+      dispatch(setFilters(params));
+      setReduxLoaded(true);
+    } else {
+      setReduxLoaded(true);
+    }
+  }, []);
+
+  const onChangePage = (number) => dispatch(setCurrentPage(number));
+
+  React.useEffect(() => {
+    if (!isReduxLoaded && !isMounted) return;
+    fetchPizzas();
+    isMounted.current = true;
   }, [activeCategory, sortType, isReversed, searchValue, currentPage]);
+
+  React.useEffect(() => {
+    if (!isReduxLoaded) return;
+
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        currentPage,
+        sortType,
+        activeCategory,
+        isReversed,
+      });
+      navigate(`?${queryString}`);
+    }
+  }, [activeCategory, sortType, currentPage, isReversed]);
 
   return (
     <div className="container">
@@ -59,8 +99,9 @@ const Home = () => {
           items.map((pizza) => <Pizza key={pizza.id} {...pizza} />)
         )}
       </div>
-      <Pagination onChangePage={(number) => setCurrentPage(number)} />
+      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );
 };
+
 export default Home;

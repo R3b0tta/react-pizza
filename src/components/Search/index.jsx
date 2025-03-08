@@ -1,22 +1,35 @@
 import React from "react";
 import styles from "./Search.module.scss";
 import { AppContext } from "../../App";
+import debounce from "lodash.debounce";
 
 const Search = () => {
+  const [value, setValue] = React.useState("");
   const { searchValue, setSearchValue } = React.useContext(AppContext);
   const inputRef = React.useRef();
+
+  const updateSearchValue = React.useCallback(
+    debounce((str) => {
+      setSearchValue(str);
+    }, 500),
+    [],
+  );
+  const onChangeInput = (event) => {
+    setValue(event.target.value);
+    updateSearchValue(event.target.value);
+  };
+
   const clearSearchValue = () => {
     setSearchValue("");
+    setValue("");
     inputRef.current.focus();
   };
   return (
     <div className={styles.root}>
       <input
         ref={inputRef}
-        value={searchValue}
-        onChange={(event) => {
-          setSearchValue(event.target.value);
-        }}
+        value={value}
+        onChange={onChangeInput}
         placeholder="Поиск пиццы..."
       />
       <svg
@@ -40,8 +53,6 @@ const Search = () => {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
             d="M4.11 2.697L2.698 4.11 6.586 8l-3.89 3.89 1.415 1.413L8 9.414l3.89 3.89 1.413-1.415L9.414 8l3.89-3.89-1.415-1.413L8 6.586l-3.89-3.89z"
             fill="#000"
             data-darkreader-inline-fill=""
