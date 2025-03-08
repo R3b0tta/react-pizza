@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setIsReversed, setSortType } from "../redux/slices/filterSlice";
 
 export default function Sort() {
   const dispatch = useDispatch();
+  const sortRef = useRef();
   const { sortType } = useSelector((state) => state.filterSlice);
   const { isReversed } = useSelector((state) => state.filterSlice);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -13,11 +14,24 @@ export default function Sort() {
   const changeReverse = () => dispatch(setIsReversed(!isReversed));
   const onClickSortType = (i) => dispatch(setSortType(i));
 
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.composedPath().includes(sortRef.current)) {
+        setIsOpen(false);
+      }
+    };
+    document.body.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.body.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   function toggleActivateSort() {
     setIsOpen(!isOpen);
   }
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
