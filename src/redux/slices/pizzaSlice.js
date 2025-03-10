@@ -1,24 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export const fetchPizzas = createAsyncThunk(
   "pizza/fetchPizzasStatus",
   async (params, thunkAPI) => {
     const { activeCategory, sortType, searchValue, currentPage, isReversed } =
       params;
-    const url = new URL(
-      "https://6785cbe9f80b78923aa47299.mockapi.io/api/react-pizza/pizzas",
-    );
-    if (activeCategory > 0) {
-      url.searchParams.append("category", activeCategory);
-    }
+
     const sortTypes = ["rating", "price", "title"];
-    url.searchParams.append("sortBy", sortTypes[sortType]);
-    url.searchParams.append("search", searchValue);
-    url.searchParams.append("page", currentPage);
-    url.searchParams.append("limit", 4);
-    const response = await fetch(url);
-    const data = await response.json();
-    const result = Array.isArray(data) ? data : [];
+
+    const response = await axios.get(
+      "https://6785cbe9f80b78923aa47299.mockapi.io/api/react-pizza/pizzas",
+      {
+        params: {
+          ...(activeCategory > 0 && { category: activeCategory }),
+          sortBy: sortTypes[sortType],
+          search: searchValue,
+          page: currentPage,
+          limit: 4,
+        },
+      },
+    );
+
+    const result = Array.isArray(response.data) ? response.data : [];
     return isReversed ? result.reverse() : result;
   },
 );

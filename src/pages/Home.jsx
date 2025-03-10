@@ -76,7 +76,6 @@ const Home = () => {
         <Categories />
         <Sort />
       </div>
-      <h2 className="content__title">Все пиццы</h2>
 
       {status === "error" ? (
         <div>
@@ -86,17 +85,22 @@ const Home = () => {
           <p>Мы очень сожалеем и знаем об ошибке, зайдите чуть позже.</p>
         </div>
       ) : (
-        <div className="content__items">
-          {status === "loading" ? (
-            [...new Array(4)].map((_, i) => <Skeleton key={i} />)
-          ) : items.length === 0 ? (
-            <p style={{ textAlign: "center", fontSize: "18px", color: "#888" }}>
-              Ничего не найдено
-            </p>
-          ) : (
-            items.map((pizza) => <Pizza key={pizza.id} {...pizza} />)
-          )}
-        </div>
+        <>
+          <h2 className="content__title">Все пиццы</h2>
+          <div className="content__items">
+            {status === "loading" ? (
+              [...new Array(4)].map((_, i) => <Skeleton key={i} />)
+            ) : items.length === 0 ? (
+              <p
+                style={{ textAlign: "center", fontSize: "18px", color: "#888" }}
+              >
+                Ничего не найдено
+              </p>
+            ) : (
+              items.map((pizza) => <Pizza key={pizza.id} {...pizza} />)
+            )}
+          </div>
+        </>
       )}
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
