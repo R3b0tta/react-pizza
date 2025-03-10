@@ -1,12 +1,15 @@
 import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsReversed, setSortType } from "../redux/slices/filterSlice";
+import {
+  setIsReversed,
+  setSortType,
+  filterSelector,
+} from "../redux/slices/filterSlice";
 
 export default function Sort() {
   const dispatch = useDispatch();
   const sortRef = useRef();
-  const { sortType } = useSelector((state) => state.filterSlice);
-  const { isReversed } = useSelector((state) => state.filterSlice);
+  const { sortType, isReversed } = useSelector(filterSelector);
   const [isOpen, setIsOpen] = React.useState(false);
   const sortList = ["популярности", "цене", "алфавиту"];
   const sortName = sortList[sortType];

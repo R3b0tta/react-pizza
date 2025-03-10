@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchPizzas = createAsyncThunk(
   "pizza/fetchPizzasStatus",
-  async (params) => {
+  async (params, thunkAPI) => {
     const { activeCategory, sortType, searchValue, currentPage, isReversed } =
       params;
     const url = new URL(
@@ -53,5 +53,9 @@ const pizzaSlice = createSlice({
 });
 
 export const { setItems } = pizzaSlice.actions;
+
+export const pizzaSelector = (state) => state.pizzaSlice;
+export const getCartItemByIdSelector = (id) => (state) =>
+  state.cartSlice.items.find((obj) => obj.id === id);
 
 export default pizzaSlice.reducer;

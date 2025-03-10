@@ -4,10 +4,13 @@ import Sort from "../components/Sort";
 import Skeleton from "../components/Pizza/Skeleton";
 import Pizza from "../components/Pizza";
 import { Pagination } from "../components/Pagination";
-import { AppContext } from "../App";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchPizzas } from "../redux/slices/pizzaSlice";
-import { setCurrentPage, setFilters } from "../redux/slices/filterSlice";
+import { fetchPizzas, pizzaSelector } from "../redux/slices/pizzaSlice";
+import {
+  filterSelector,
+  setCurrentPage,
+  setFilters,
+} from "../redux/slices/filterSlice";
 import qs from "qs";
 import { useNavigate } from "react-router-dom";
 
@@ -15,11 +18,10 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { items, status } = useSelector((state) => state.pizzaSlice);
-  const { activeCategory, isReversed, sortType, currentPage } = useSelector(
-    (state) => state.filterSlice,
-  );
-  const { searchValue } = React.useContext(AppContext);
+  const { items, status } = useSelector(pizzaSelector);
+  const { activeCategory, isReversed, sortType, currentPage } =
+    useSelector(filterSelector);
+  const { searchValue } = useSelector(filterSelector);
   const [isReduxLoaded, setReduxLoaded] = React.useState(false);
   const isMounted = React.useRef(false);
   async function getPizzas() {
@@ -81,7 +83,7 @@ const Home = () => {
           <h2>
             Произошла ошибка <icon>😕</icon>
           </h2>
-          <p>Мы очень сожалеем и значем об ошибке, зайдите чуть позже.</p>
+          <p>Мы очень сожалеем и знаем об ошибке, зайдите чуть позже.</p>
         </div>
       ) : (
         <div className="content__items">
