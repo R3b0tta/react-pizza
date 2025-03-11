@@ -5,7 +5,7 @@ import { filterSelector, setActiveCategory } from "../redux/slices/filterSlice";
 export default function Categories() {
   const dispatch = useDispatch();
   const { activeCategory } = useSelector(filterSelector);
-  const onClickCategory = (i) => dispatch(setActiveCategory(i));
+  const onClickCategory = (i: number) => dispatch(setActiveCategory(i));
   const categories = [
     "Все",
     "Мясные",

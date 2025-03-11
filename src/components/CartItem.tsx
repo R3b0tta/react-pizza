@@ -2,32 +2,40 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { addItem, removeItem, minusItem } from "../redux/slices/cartSlice";
 
-export const CartItem = ({ id, title, type, price, count, size }) => {
+type CartItemProps = {
+  id: string;
+  title: string;
+  type: string;
+  price: number;
+  count: number;
+  size: number;
+  imageUrl: string;
+};
+
+export const CartItem: React.FC<CartItemProps> = ({
+  id,
+  title,
+  type,
+  price,
+  count,
+  size,
+  imageUrl,
+}) => {
   const dispatch = useDispatch();
-  const item = {
-    id,
-    title,
-    price,
-    type,
-  };
   const onClickMinus = () => {
-    dispatch(minusItem(item));
+    dispatch(minusItem(id));
   };
   const onClickPlus = () => {
-    dispatch(addItem(item));
+    dispatch(addItem({ id, title, price, type, count, size, imageUrl }));
   };
   const onClickRemove = () => {
-    dispatch(removeItem(item));
+    dispatch(removeItem(id));
   };
 
   return (
     <div className="cart__item">
       <div className="cart__item-img">
-        <img
-          className="pizza-block__image"
-          src="https://media.dodostatic.net/image/r:584x584/11ef9a30c3246adebecb726548cbede9.avif"
-          alt="Pizza"
-        />
+        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
       </div>
       <div className="cart__item-info">
         <h3>{title}</h3>

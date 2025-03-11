@@ -8,13 +8,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchPizzas, pizzaSelector } from "../redux/slices/pizzaSlice";
 import {
   filterSelector,
+  FilterState,
   setCurrentPage,
   setFilters,
 } from "../redux/slices/filterSlice";
 import qs from "qs";
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -26,6 +27,7 @@ const Home = () => {
   const isMounted = React.useRef(false);
   async function getPizzas() {
     dispatch(
+      // @ts-ignore
       fetchPizzas({
         activeCategory,
         sortType,
@@ -39,16 +41,24 @@ const Home = () => {
 
   React.useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
+      const parsedParams = qs.parse(window.location.search.substring(1));
 
-      dispatch(setFilters(params));
+      const filters: FilterState = {
+        searchValue: parsedParams.searchValue as string,
+        activeCategory: Number(parsedParams.activeCategory) || 0,
+        sortType: Number(parsedParams.sortType) || 0,
+        isReversed: parsedParams.isReversed === "true",
+        currentPage: Number(parsedParams.currentPage) || 1,
+      };
+
+      dispatch(setFilters(filters));
       setReduxLoaded(true);
     } else {
       setReduxLoaded(true);
     }
   }, []);
 
-  const onChangePage = (number) => dispatch(setCurrentPage(number));
+  const onChangePage = (number: number) => dispatch(setCurrentPage(number));
 
   React.useEffect(() => {
     if (!isReduxLoaded && !isMounted) return;
@@ -80,7 +90,7 @@ const Home = () => {
       {status === "error" ? (
         <div>
           <h2>
-            Произошла ошибка <icon>😕</icon>
+            Произошла ошибка <span>😕</span>
           </h2>
           <p>Мы очень сожалеем и знаем об ошибке, зайдите чуть позже.</p>
         </div>
@@ -97,7 +107,7 @@ const Home = () => {
                 Ничего не найдено
               </p>
             ) : (
-              items.map((pizza) => <Pizza key={pizza.id} {...pizza} />)
+              items.map((pizza: any) => <Pizza key={pizza.id} {...pizza} />)
             )}
           </div>
         </>

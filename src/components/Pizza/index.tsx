@@ -1,12 +1,28 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../../redux/slices/cartSlice";
+import { addItem, CartItem } from "../../redux/slices/cartSlice";
 import { getCartItemByIdSelector } from "../../redux/slices/pizzaSlice";
 import { Link } from "react-router-dom";
 
 const typeNames = ["тонкое", "традиционное"];
 
-export default function Pizza({ id, price, title, imageUrl, sizes, types }) {
+type PizzaProps = {
+  id: string;
+  price: number;
+  title: string;
+  imageUrl: string;
+  sizes: number[];
+  types: number[];
+};
+
+const Pizza: React.FC<PizzaProps> = ({
+  id,
+  price,
+  title,
+  imageUrl,
+  sizes,
+  types,
+}) => {
   const dispatch = useDispatch();
   const item = useSelector(getCartItemByIdSelector(id));
   const pizzaCount = item ? item.count : 0;
@@ -14,22 +30,23 @@ export default function Pizza({ id, price, title, imageUrl, sizes, types }) {
   const [typeActive, setTypeActive] = React.useState(0);
 
   const onClickAdd = () => {
-    const item = {
+    const item: CartItem = {
       id,
       title,
       price,
       imageUrl,
       type: typeNames[typeActive],
       size: sizes[sizeActive],
+      count: 0,
     };
     dispatch(addItem(item));
   };
 
-  function handleTypeClick(index) {
+  function handleTypeClick(index: number) {
     setTypeActive(index);
   }
 
-  function handleSizeClick(index) {
+  function handleSizeClick(index: number) {
     setSizeActive(index);
   }
   return (
@@ -89,4 +106,6 @@ export default function Pizza({ id, price, title, imageUrl, sizes, types }) {
       </div>
     </div>
   );
-}
+};
+
+export default Pizza;

@@ -6,20 +6,21 @@ import {
   filterSelector,
 } from "../redux/slices/filterSlice";
 
+const sortList = ["популярности", "цене", "алфавиту"];
+
 export default function Sort() {
   const dispatch = useDispatch();
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement>(null);
   const { sortType, isReversed } = useSelector(filterSelector);
   const [isOpen, setIsOpen] = React.useState(false);
-  const sortList = ["популярности", "цене", "алфавиту"];
   const sortName = sortList[sortType];
 
   const changeReverse = () => dispatch(setIsReversed(!isReversed));
-  const onClickSortType = (i) => dispatch(setSortType(i));
+  const onClickSortType = (i: number) => dispatch(setSortType(i));
 
   React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.composedPath().includes(sortRef.current)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
         setIsOpen(false);
       }
     };

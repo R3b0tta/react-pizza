@@ -1,6 +1,15 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
-const initialState = {
+export interface FilterState {
+  searchValue: string;
+  activeCategory: number;
+  sortType: number;
+  isReversed: boolean;
+  currentPage: number;
+}
+
+const initialState: FilterState = {
   searchValue: "",
   activeCategory: 0,
   sortType: 0,
@@ -12,22 +21,22 @@ const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    setActiveCategory: (state, action) => {
+    setActiveCategory: (state, action: PayloadAction<number>) => {
       state.activeCategory = action.payload;
     },
-    setSearchValue: (state, action) => {
+    setSearchValue: (state, action: PayloadAction<string>) => {
       state.searchValue = action.payload;
     },
-    setSortType: (state, action) => {
+    setSortType: (state, action: PayloadAction<number>) => {
       state.sortType = action.payload;
     },
-    setIsReversed: (state, action) => {
+    setIsReversed: (state, action: PayloadAction<boolean>) => {
       state.isReversed = action.payload;
     },
-    setCurrentPage: (state, action) => {
+    setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
-    setFilters: (state, action) => {
+    setFilters: (state, action: PayloadAction<FilterState>) => {
       state.currentPage = Number(action.payload.currentPage);
       state.isReversed = action.payload.isReversed;
       state.sortType = Number(action.payload.sortType);
@@ -45,6 +54,6 @@ export const {
   setSearchValue,
 } = filterSlice.actions;
 
-export const filterSelector = (state) => state.filterSlice;
+export const filterSelector = (state: RootState) => state.filterSlice;
 
 export default filterSlice.reducer;
