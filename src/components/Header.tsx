@@ -2,19 +2,29 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Search from "./Search";
 import { useSelector } from "react-redux";
-import { cartSelector } from "../redux/slices/cartSlice";
+import { cartSelector } from "../redux/slices/cartSlice/selectors";
+import logo from "../assets/img/logo.svg";
 
 export default function Header() {
-  const { itemsLength, totalPrice } = useSelector(cartSelector);
+  const { itemsLength, totalPrice, items } = useSelector(cartSelector);
   const { pathname } = useLocation();
+  const isMounted = React.useRef(false);
+
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const json = JSON.stringify({ totalPrice, items, itemsLength });
+      localStorage.setItem("cart", json);
+    }
+    isMounted.current = true;
+  }, [items, totalPrice, itemsLength]);
   return (
     <div className="header">
       <div className="container">
         <Link to="/">
           <div className="header__logo">
-            <img width="38" src="img/pizza-logo.svg" alt="Index logo" />
+            <img width="45px" src={logo} alt="Index logo" />
             <div>
-              <h1>React Index</h1>
+              <h1>React Pizza</h1>
               <p>самая вкусная пицца во вселенной</p>
             </div>
           </div>

@@ -1,33 +1,45 @@
 .root{
- :global{
-   .selected{
+
+  :global{
+    align-self: center;
+    .disabled {
+      pointer-events: none;
+      opacity: 0.3;
+    }
+    .selected{
      a {
-       background-color: #fe5f1e;
+       background-color: black;
        color: white;
 
      }
    }
+    .previous, .next {
+      a {
+        border: none;
+        background-color: #c5c3c3;
+        border-radius: 30px;
+      }
+    }
    li {
      display: inline-flex;
-
 
      &:hover {
        a {
          color: white;
-         background-color: #fe5f1e;
+         background-color: black;
 
        }
      }
      a {
        display: inline-block;
        margin-left: 12px;
-       color: #fe5f1e;
+       color: black;
        text-align: center;
        line-height: 38px;
        width: 42px;
        height: 42px;
-       border: 1px solid #fe5f1e;
-       border-radius: 30px;
+       border: 1px solid black;
+       border-radius: 10px;
        margin-right: 5px;
        cursor: pointer;
      }

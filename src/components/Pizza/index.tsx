@@ -1,7 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, CartItem } from "../../redux/slices/cartSlice";
-import { getCartItemByIdSelector } from "../../redux/slices/pizzaSlice";
+import { addItem } from "../../redux/slices/cartSlice/slice";
+import { CartItem } from "../../redux/slices/cartSlice/types";
+import { getCartItemByIdSelector } from "../../redux/slices/pizzaSlice/selectors";
 import { Link } from "react-router-dom";
 
 const typeNames = ["тонкое", "традиционное"];
@@ -65,7 +66,7 @@ const Pizza: React.FC<PizzaProps> = ({
                 className={typeActive === index ? "active" : ""}
                 onClick={() => handleTypeClick(index)}
               >
-                {typeNames[typeId]}
+                {typeNames[index]}
               </li>
             ))}
           </ul>

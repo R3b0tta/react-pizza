@@ -1,10 +1,7 @@
 import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setIsReversed,
-  setSortType,
-  filterSelector,
-} from "../redux/slices/filterSlice";
+import { setIsReversed, setSortType } from "../redux/slices/filterSlice/slice";
+import { filterSelector } from "../redux/slices/filterSlice/selectors";
 
 const sortList = ["популярности", "цене", "алфавиту"];
 

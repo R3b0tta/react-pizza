@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { filterSelector, setActiveCategory } from "../redux/slices/filterSlice";
+import { filterSelector } from "../redux/slices/filterSlice/selectors";
+import { setActiveCategory } from "../redux/slices/filterSlice/slice";
 
 export default function Categories() {
   const dispatch = useDispatch();

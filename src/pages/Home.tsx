@@ -1,23 +1,25 @@
 import React from "react";
+import qs from "qs";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import Skeleton from "../components/Pizza/Skeleton";
 import Pizza from "../components/Pizza";
 import { Pagination } from "../components/Pagination";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchPizzas, pizzaSelector } from "../redux/slices/pizzaSlice";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../redux/store";
+import { pizzaSelector } from "../redux/slices/pizzaSlice/selectors";
 import {
-  filterSelector,
-  FilterState,
-  setCurrentPage,
-  setFilters,
-} from "../redux/slices/filterSlice";
-import qs from "qs";
+  fetchPizzas,
+  fetchSearch,
+} from "../redux/slices/pizzaSlice/asyncActions";
+import { setCurrentPage, setFilters } from "../redux/slices/filterSlice/slice";
+import { filterSelector } from "../redux/slices/filterSlice/selectors";
+import { FilterState } from "../redux/slices/filterSlice/types";
 import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { items, status } = useSelector(pizzaSelector);
   const { activeCategory, isReversed, sortType, currentPage } =
@@ -27,7 +29,6 @@ const Home: React.FC = () => {
   const isMounted = React.useRef(false);
   async function getPizzas() {
     dispatch(
-      // @ts-ignore
       fetchPizzas({
         activeCategory,
         sortType,
@@ -36,6 +37,10 @@ const Home: React.FC = () => {
         isReversed,
       }),
     );
+    window.scrollTo(0, 0);
+  }
+  async function getSearchPizzas() {
+    dispatch(fetchSearch({ searchValue, currentPage }));
     window.scrollTo(0, 0);
   }
 
@@ -62,7 +67,11 @@ const Home: React.FC = () => {
 
   React.useEffect(() => {
     if (!isReduxLoaded && !isMounted) return;
-    getPizzas();
+    if (searchValue === "") {
+      getPizzas();
+    } else {
+      getSearchPizzas();
+    }
     isMounted.current = true;
   }, [activeCategory, sortType, isReversed, searchValue, currentPage]);
 
@@ -88,11 +97,24 @@ const Home: React.FC = () => {
       </div>
 
       {status === "error" ? (
-        <div>
-          <h2>
-            Произошла ошибка <span>😕</span>
+        <div
+          style={{
+            margin: "10vh 0",
+            padding: "0 23vh",
+            width: "100%",
+            display: "flex",
+            textWrap: "wrap",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
+          <h2
+            style={{ textAlign: "center", margin: "20px", lineHeight: "50px" }}
+          >
+            Ничего не найдено или произошла ошибка <span>😕</span>
           </h2>
-          <p>Мы очень сожалеем и знаем об ошибке, зайдите чуть позже.</p>
+          <h4>Можете попробовать снова позже.</h4>
         </div>
       ) : (
         <>
@@ -112,7 +134,9 @@ const Home: React.FC = () => {
           </div>
         </>
       )}
-      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
+      <div className="container__pagination">
+        <Pagination currentPage={currentPage} onChangePage={onChangePage} />
+      </div>
     </div>
   );
 };
