@@ -10,7 +10,6 @@ export interface PizzaItem {
 export type PizzaParams = {
   activeCategory: number;
   sortType: number;
-  searchValue: string;
   currentPage: number;
   isReversed: boolean;
 };

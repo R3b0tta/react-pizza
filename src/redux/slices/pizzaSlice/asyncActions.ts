@@ -5,8 +5,7 @@ import axios from "axios";
 export const fetchPizzas = createAsyncThunk<PizzaItem[], PizzaParams>(
   "pizza/fetchPizzasStatus",
   async (params) => {
-    const { activeCategory, sortType, searchValue, currentPage, isReversed } =
-      params;
+    const { activeCategory, sortType, currentPage, isReversed } = params;
     const sortTypes = ["rating", "price", "title"];
 
     const response = await axios.get<PizzaItem[]>(
@@ -15,7 +14,6 @@ export const fetchPizzas = createAsyncThunk<PizzaItem[], PizzaParams>(
         params: {
           ...(activeCategory > 0 && { category: activeCategory }),
           sortBy: sortTypes[sortType],
-          search: searchValue,
           page: currentPage,
           limit: 4,
         },
