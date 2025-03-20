@@ -25,14 +25,14 @@ const Home: React.FC = () => {
   const { activeCategory, isReversed, sortType, currentPage } =
     useSelector(filterSelector);
   const { searchValue } = useSelector(filterSelector);
-  const [isReduxLoaded, setReduxLoaded] = React.useState(false);
   const isMounted = React.useRef(false);
+  const isFiltersLoaded = React.useRef(true);
+  const [wasQSLoaded, setWasQSLoaded] = React.useState(false);
   async function getPizzas() {
     dispatch(
       fetchPizzas({
         activeCategory,
         sortType,
-        searchValue,
         currentPage,
         isReversed,
       }),
@@ -43,6 +43,7 @@ const Home: React.FC = () => {
     dispatch(fetchSearch({ searchValue, currentPage }));
     window.scrollTo(0, 0);
   }
+  const onChangePage = (number: number) => dispatch(setCurrentPage(number));
 
   React.useEffect(() => {
     if (window.location.search) {
@@ -57,37 +58,41 @@ const Home: React.FC = () => {
       };
 
       dispatch(setFilters(filters));
-      setReduxLoaded(true);
-    } else {
-      setReduxLoaded(true);
+      setWasQSLoaded(true);
     }
   }, []);
 
-  const onChangePage = (number: number) => dispatch(setCurrentPage(number));
+  React.useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+
+    const queryString = qs.stringify({
+      currentPage,
+      sortType,
+      activeCategory,
+      isReversed,
+    });
+
+    navigate(`?${queryString}`);
+  }, [activeCategory, sortType, currentPage, isReversed]);
 
   React.useEffect(() => {
-    if (!isReduxLoaded && !isMounted) return;
+    if (isFiltersLoaded.current) {
+      isFiltersLoaded.current = false;
+      if (!wasQSLoaded) {
+        getPizzas();
+      }
+      return;
+    }
+
     if (searchValue === "") {
       getPizzas();
     } else {
       getSearchPizzas();
     }
-    isMounted.current = true;
-  }, [activeCategory, sortType, isReversed, searchValue, currentPage]);
-
-  React.useEffect(() => {
-    if (!isReduxLoaded) return;
-
-    if (isMounted.current) {
-      const queryString = qs.stringify({
-        currentPage,
-        sortType,
-        activeCategory,
-        isReversed,
-      });
-      navigate(`?${queryString}`);
-    }
-  }, [activeCategory, sortType, currentPage, isReversed]);
+  }, [searchValue, activeCategory, sortType, isReversed, currentPage]);
 
   return (
     <div className="container">

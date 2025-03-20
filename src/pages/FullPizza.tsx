@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export const FullPizza: React.FC = () => {
+const FullPizza: React.FC = () => {
   const [data, setData] = React.useState<{
     imageUrl: string;
     title: string;
@@ -30,7 +30,7 @@ export const FullPizza: React.FC = () => {
   }, []);
 
   if (!data) {
-    return "Загрузка...";
+    return <div>Загрузка...</div>;
   }
   return (
     <div className="container">
@@ -40,3 +40,5 @@ export const FullPizza: React.FC = () => {
     </div>
   );
 };
+
+export default FullPizza;

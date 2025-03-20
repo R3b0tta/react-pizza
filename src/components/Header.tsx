@@ -4,16 +4,20 @@ import Search from "./Search";
 import { useSelector } from "react-redux";
 import { cartSelector } from "../redux/slices/cartSlice/selectors";
 import logo from "../assets/img/logo.svg";
+import { filterSelector } from "../redux/slices/filterSlice/selectors";
 
 export default function Header() {
+  const { sortType, isReversed } = useSelector(filterSelector);
   const { itemsLength, totalPrice, items } = useSelector(cartSelector);
   const { pathname } = useLocation();
   const isMounted = React.useRef(false);
 
   React.useEffect(() => {
     if (isMounted.current) {
+      const localFilter = JSON.stringify({ sortType, isReversed });
       const json = JSON.stringify({ totalPrice, items, itemsLength });
       localStorage.setItem("cart", json);
+      localStorage.setItem("filter", localFilter);
     }
     isMounted.current = true;
   }, [items, totalPrice, itemsLength]);
